@@ -1,4 +1,4 @@
-# openplus-djt-manager
+# Course Management
 
 > A Vue.js project
 
