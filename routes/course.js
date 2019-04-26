@@ -90,6 +90,57 @@ router.get('/course/detail/:id', async (ctx, next) => {
     }
     ctx.body = ctxBoy
 })
+//Register
+router.post('/course/register', async (ctx, next) => {
+    let ctxBoy = {ret:-1,msg:'error'}
+        /**check length start**/
+        let cmd   = ctx.request.body.cmd;
+        let id              =parseInt(ctx.request.body.id) || null
+        let username      = ctx.request.body.username || null
+        let password    =   ctx.request.body.password || null
+        /**check length end**/
+
+        let registerParams = {cmd,id,username,password}
+        console.log(registerParams)
+        await course.userRegister(registerParams).then(result => {
+            ctxBoy.ret = 0;
+            ctxBoy.msg = 'ok';
+            if(result.insertId) ctxBoy.insertId = result.insertId
+        }).catch(err => {
+            console.log("/course/register catch error：",err)
+            ctxBoy.ret = -1;
+            ctxBoy.msg = "catch err";
+        })
+    ctx.body = ctxBoy
+})
+
+//login
+router.get('/course/login', async (ctx, next) => {
+
+    /**check length start**/
+	let username    =   ctx.query.username
+	let password   =   ctx.query.password
+	/**check length end**/
+
+    let params = { username,password}
+    let ctxBoy = {ret:-1,msg:'',data:[]}
+    
+    await course.login(params).then(result => {
+        if(result.length > 0){
+            for(let k in result){
+                let key = result[k];
+                console.log(key)
+                ctxBoy.data.push(key)
+            }
+        }
+        ctxBoy.ret = 0;
+    }).catch(err => {
+        console.log("/course/list catch error：",err)
+        ctxBoy.ret = -1;
+        ctxBoy.msg = "catch err";
+    })
+    ctx.body = ctxBoy
+})
 // edit course detail
 router.post('/course/detail', async (ctx, next) => {
     let ctxBoy = {ret:-1,msg:'error'}

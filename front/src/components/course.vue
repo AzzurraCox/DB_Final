@@ -373,7 +373,7 @@ export default {
 					}
 					that.handleSucess()
 				}).catch(function (error) {
-					//that.$message.error('request Error!')
+					that.$message.error('request Error!')
 				});
 			}
 			//Chapter edit
