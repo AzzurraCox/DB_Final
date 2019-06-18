@@ -12,10 +12,12 @@ router.get('/course/list', async (ctx, next) => {
 	let courseTitle =   ctx.query.courseTitle ? (ctx.query.courseTitle).toString() : ''
 	let status      =   ctx.query.status >= 0 ? parseInt(ctx.query.status) : null
 	let is_public   =    ctx.query.is_public >= 0 ? parseInt(ctx.query.is_public) : null
-	let department_id  =   parseInt(ctx.query.department_id) || null
+    let department_id  =   parseInt(ctx.query.department_id) || null
+    console.log("department_id = "+ department_id)
 	/**check length end**/
 
     let params = { pageSize,pageIndex,courseTitle,timeStart,timeEnd,is_public,status,department_id }
+    console.log(params)
     let ctxBoy = {ret:-1,msg:'',data:[],total:0}
 
     a= 1
@@ -90,57 +92,6 @@ router.get('/course/detail/:id', async (ctx, next) => {
     }
     ctx.body = ctxBoy
 })
-//Register
-router.post('/course/register', async (ctx, next) => {
-    let ctxBoy = {ret:-1,msg:'error'}
-        /**check length start**/
-        let cmd   = ctx.request.body.cmd;
-        let id              =parseInt(ctx.request.body.id) || null
-        let username      = ctx.request.body.username || null
-        let password    =   ctx.request.body.password || null
-        /**check length end**/
-
-        let registerParams = {cmd,id,username,password}
-        console.log(registerParams)
-        await course.userRegister(registerParams).then(result => {
-            ctxBoy.ret = 0;
-            ctxBoy.msg = 'ok';
-            if(result.insertId) ctxBoy.insertId = result.insertId
-        }).catch(err => {
-            console.log("/course/register catch error：",err)
-            ctxBoy.ret = -1;
-            ctxBoy.msg = "catch err";
-        })
-    ctx.body = ctxBoy
-})
-
-//login
-router.get('/course/login', async (ctx, next) => {
-
-    /**check length start**/
-	let username    =   ctx.query.username
-	let password   =   ctx.query.password
-	/**check length end**/
-
-    let params = { username,password}
-    let ctxBoy = {ret:-1,msg:'',data:[]}
-    
-    await course.login(params).then(result => {
-        if(result.length > 0){
-            for(let k in result){
-                let key = result[k];
-                console.log(key)
-                ctxBoy.data.push(key)
-            }
-        }
-        ctxBoy.ret = 0;
-    }).catch(err => {
-        console.log("/course/list catch error：",err)
-        ctxBoy.ret = -1;
-        ctxBoy.msg = "catch err";
-    })
-    ctx.body = ctxBoy
-})
 // edit course detail
 router.post('/course/detail', async (ctx, next) => {
     let ctxBoy = {ret:-1,msg:'error'}
@@ -149,7 +100,7 @@ router.post('/course/detail', async (ctx, next) => {
 
         /**check length start**/
         let id              =   parseInt(ctx.request.body.id) || null
-        let department      =   parseInt(ctx.request.body.department) || null
+        let department_id      =   parseInt(ctx.request.body.department_id) || null
         console.log(ctx.request.body.status)
         let status          =   ctx.request.body.status >= 0 ? parseInt(ctx.request.body.status) : null
         let is_public       =   ctx.request.body.is_public >= 0 ? parseInt(ctx.request.body.is_public) : null
@@ -158,7 +109,7 @@ router.post('/course/detail', async (ctx, next) => {
         let introduction    =   ctx.request.body.introduction || null
         /**check length end**/
 
-        let courseParams = {cmd,id,department,status,is_public,cover,title,introduction}
+        let courseParams = {cmd,id,department_id,status,is_public,cover,title,introduction}
         console.log(courseParams)
         await course.courseHandle(courseParams).then(result => {
             ctxBoy.ret = 0;

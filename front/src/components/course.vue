@@ -9,16 +9,16 @@
 				<el-input placeholder="Course Title" v-model="search.courseTitle" clearable style="width:300px"></el-input>
 			</div>
 			<div class="search_item">Department ：
-				<el-select v-model="search.department" placeholder="Choose" style="width:200px">
+				<el-select v-model="search.department_id" placeholder="Choose" style="width:200px">
 					<el-option v-for="item in departmentOptions" :key="item.value" :label="item.text" :value="item.value"></el-option>
 				</el-select>
 			</div>
-			<div class="search_item">status ：
+			<div class="search_item">Status ：
 				<el-select v-model="search.status" placeholder="Choose" style="width:200px">
 					<el-option v-for="item in statusOptions" :key="item.value" :label="item.text" :value="item.value"></el-option>
 				</el-select>
 			</div>
-			<div class="search_item">public ：
+			<div class="search_item">Public ：
 				<el-select v-model="search.is_public" placeholder="Choose" style="width:200px">
 					<el-option v-for="item in publicOptions" :key="item.value" :label="item.text" :value="item.value"></el-option>
 				</el-select>
@@ -184,7 +184,7 @@ export default {
 				courseTitle:'',
 				is_public:-1,
 				status:-1,
-				department:0
+				department_id:0
 			},
 			departmentOptions: [],
 			statusOptions:[{ text: 'All', value: -1 },{ text: 'Pulish', value: 1 }, { text: 'unPulish', value: 0 }],
@@ -253,7 +253,7 @@ export default {
 
 			if(this.search.is_public != -1)  url += '&is_public=' + this.search.is_public
 			if(this.search.status != -1)  url += '&status=' + this.search.status
-			if(this.search.department)  url += '&department=' + this.search.department
+			if(this.search.department_id)  url += '&department_id=' + this.search.department_id
 
 			this.$axios.get(url).then(function (response) {
 				if(response.data.ret === 0 ){
@@ -302,7 +302,7 @@ export default {
 			if(a.department_title != b.department_title){
 				for(let k in this.departmentOptions){
 					if(this.departmentOptions[k].text == a.department_title){
-						newParams['department'] = this.departmentOptions[k].value
+						newParams['department_id'] = this.departmentOptions[k].value
 						break
 					}
 				}
@@ -348,7 +348,7 @@ export default {
 			if(newParams.cover) params.cover = newParams.cover
 			if(newParams.title) params.title = newParams.title
 			if(newParams.introduction) params.introduction = newParams.introduction
-			if(newParams.department) params.department = newParams.department
+			if(newParams.department_id) params.department_id = newParams.department_id
 
 			// Edit/Delete id and cmd require. course length mush more than 2 
 			let courseLength = 0
@@ -373,7 +373,7 @@ export default {
 					}
 					that.handleSucess()
 				}).catch(function (error) {
-					that.$message.error('request Error!')
+					//that.$message.error('request Error!')
 				});
 			}
 			//Chapter edit
@@ -539,7 +539,7 @@ export default {
 			this.$refs[formName].resetFields();
 		},
 		filterDepartmentTitle(value, row) {
-			return row.department_title === value;
+			return row.department === value;
 		},
 		filterStatus(value, row) {
 			return row.status === value;
